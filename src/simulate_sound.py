@@ -2,6 +2,7 @@ from mic_array import MicArray
 import numpy as np
 import json
 import matplotlib.pyplot as plt
+from speaker_array import SpeakerArray
 
 class Sim:
     def __init__(self, mic_cfg_fname: str, physics_cfg_fname: str) -> None:
@@ -13,9 +14,9 @@ class Sim:
         self.physics_cfg_fname = physics_cfg_fname
         self._load_physics_cfg()
 
-    def sim_time_delay(self, src_loc: np.ndarray) -> list[float]:
+    def sim_time_delay(self, speakers: SpeakerArray]) -> list[float]:
         """
-        
+        Takes a 2-d numpy array, where the first index is 
         """
         time_delays = []
         for mic_loc in self.mic_array.pos:

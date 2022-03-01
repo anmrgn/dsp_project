@@ -77,6 +77,14 @@ class MicArray:
         
         self.valid_names = True
         return self.valid_names
+    
+    def gen_names(self) -> None:
+        """
+        Generates names for each microphone (each mic has an integer name, 0, 1, etc.)
+        """
+        
+        for idx, mic in enumerate(self.mics):
+            mic.name = idx
             
 
     
