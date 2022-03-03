@@ -1,5 +1,5 @@
 import json
-from ctypes import Union
+from typing import Union
 from typing import Optional
 from exceptions import *
 import numpy as np
@@ -9,7 +9,7 @@ class Speaker:
     """
     Represents a single speaker in the speaker array
     """
-    required_params = ["pos"]
+    required_params = ["fS", "pos"]
 
     def __init__(self, json_speaker_obj: dict, default_name: Optional[Union[int, str]] = None) -> None:
         """
@@ -24,6 +24,7 @@ class Speaker:
                 raise ConfigError(f"Speaker config json missing required parameter {param}, attempted to parse json object:\n {json.dumps(json_speaker_obj, indent=4)}")
         
         self.name : str        = json_speaker_obj["name"] if "name" in json_speaker_obj else default_name
+        self.fS   : int        = json_speaker_obj["fS"]
         self.pos  : np.ndarray = np.array(json_speaker_obj["pos"])
 
 class SpeakerArray:
@@ -47,6 +48,8 @@ class SpeakerArray:
 
         # None if validate_names has not been called, else True if names are valid, False if not.
         self.valid_names = None
+
+        self.name_to_speaker: dict[str, Speaker] = {speaker.name: speaker for speaker in self.speakers}
 
     def _load_cfg(self) -> None:
         
@@ -85,4 +88,21 @@ class SpeakerArray:
         
         for idx, speaker in enumerate(self.speakers):
             speaker.name = idx
-        
+    
+    def get_sample_freq(self) -> Union[int, None]:
+        """
+        Returns the sample frequency of the speaker array if all speakers sample at the same frequency, else None
+        """
+        rval = None
+        for speaker in self.speakers:
+            if rval is not None and rval != speaker.fS:
+                return None
+            rval = speaker.fS
+        return rval
+    
+    def __contains__(self, name: str) -> bool:
+        """
+        Checks to see if the speaker array contains a speaker with name given by 
+        """
+
+        return name in self.name_to_speaker

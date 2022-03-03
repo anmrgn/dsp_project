@@ -1,4 +1,4 @@
-from ctypes import Union
+from typing import Union
 from typing import Optional
 import numpy as np
 import json
@@ -48,6 +48,9 @@ class MicArray:
         # None if validate_names has not been called, else True if names are valid, False if not.
         self.valid_names = None
 
+        self.name_to_mic: dict[str, Mic] = {mic.name: mic for mic in self.mics}
+
+
     def _load_cfg(self) -> None:
         
         with open(self.cfg_fname) as f:
@@ -85,7 +88,23 @@ class MicArray:
         
         for idx, mic in enumerate(self.mics):
             mic.name = idx
+    
+    def get_sample_freq(self) -> Union[int, None]:
+        """
+        Returns the sample frequency of the mic array if all mics sample at the same frequency, else None
+        """
+        rval = None
+        for mic in self.mics:
+            if rval is not None and rval != mic.fS:
+                return None
+            rval = mic.fS
+        return rval
             
+    def __contains__(self, name: str) -> bool:
+        """
+        Checks to see if the speaker array contains a speaker with name given by 
+        """
 
+        return name in self.name_to_mic
     
     
