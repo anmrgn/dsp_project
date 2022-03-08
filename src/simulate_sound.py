@@ -16,43 +16,55 @@ class Sim:
         self.physics_cfg_fname = physics_cfg_fname
         self._load_physics_cfg()
 
-    def run(self, audio_signals: dict[Union[int, str], np.ndarray]) -> dict[Union[int, str], np.ndarray]:
+    def run(self, audio_signals: dict[Union[int, str], Union[np.ndarray, list[float]]]) -> dict[Union[int, str], np.ndarray]:
         """
-        Runs simulation for audio signals corresponding to speaker names, returns audio signals received by microphones
+        Run simulation for audio signals corresponding to speaker names, return audio signals received by microphones
 
         Arguments:
         audio_signals -- dictionary from the name of a speaker to the sound it produces 
+
+        Returns:
+        captured_audio -- dictionary from the name of each mic to the audio signal it captures
         """
         mic_freq = self.mic_array.get_sample_freq()
         speaker_freq = self.speaker_array.get_sample_freq()
         assert mic_freq == speaker_freq and mic_freq is not None and speaker_freq is not None
+        fS = mic_freq 
+
+        audio_signals = {src: np.array(signal) for src, signal in audio_signals.items()}
 
         time_delays = {}
 
-        recv_signals = {}
+        transmitted_signal = {}
 
-        
         for src in audio_signals:
             assert src in self.speaker_array
 
             speaker = self.speaker_array.name_to_speaker[src]
 
             time_delays[src] = {}
-            recv_signals[src] = {}
+            transmitted_signal[src] = {}
 
             for mic in self.mic_array.mics:
                 time_delays[src][mic.name] = float(np.linalg.norm(mic.pos - speaker.pos) / self.speed_of_sound)
-                recv_signals[src] = np.pad()
+                transmitted_signal[src][mic.name] = np.pad(audio_signals[src], ((int(fS * time_delays[src][mic.name]), 0)))
+        
+        signal_lengths = np.array([[len(transmitted_signal[src][mic.name]) for mic in self.mic_array.mics] for src in transmitted_signal])
             
-        
-        captured_audio = 
+        max_len = np.max(signal_lengths)
 
-        
+        captured_audio = {}
 
-        # for mic_loc in self.mic_array.pos:
-        #     time_delays.append(float(np.linalg.norm(mic_loc - src_loc) / self.speed_of_sound))
-        
-        return None
+        for mic in self.mic_array.mics:
+            captured_audio[mic.name] = np.zeros(max_len)
+
+            for src in transmitted_signal:
+                signal = transmitted_signal[src][mic.name]
+
+                captured_audio[mic.name] += np.pad(signal, ((0, max_len - len(signal))))
+
+
+        return captured_audio
 
 
     def _load_physics_cfg(self) -> None:
@@ -61,11 +73,7 @@ class Sim:
             data = json.load(f)
 
         self.speed_of_sound = data["speed_of_sound"]
+        self.decay_factor = data["decay_factor"]
 
     def show_mic_locs(self) -> None:
-        fig = plt.figure()
-        ax = fig.add_subplot(projection="3d")
-        
-        ax.scatter(self.mic_array.pos[:, 0], self.mic_array.pos[:, 1], self.mic_array.pos[:, 2])
-
-        plt.show()
+        pass
