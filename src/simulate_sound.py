@@ -1,4 +1,5 @@
 from typing import Union
+from exceptions import InvalidInput
 from mic_array import MicArray
 from speaker_array import SpeakerArray
 import numpy as np
@@ -38,7 +39,8 @@ class Sim:
         transmitted_signal = {}
 
         for src in audio_signals:
-            assert src in self.speaker_array
+            if src not in self.speaker_array:
+                raise InvalidInput(f"Could not find speaker with name {src}. Either modify the speaker_cfg.json file or the input audio signals to this method.")
 
             speaker = self.speaker_array.name_to_speaker[src]
 
@@ -46,8 +48,11 @@ class Sim:
             transmitted_signal[src] = {}
 
             for mic in self.mic_array.mics:
-                time_delays[src][mic.name] = float(np.linalg.norm(mic.pos - speaker.pos) / self.speed_of_sound)
-                transmitted_signal[src][mic.name] = np.pad(audio_signals[src], ((int(fS * time_delays[src][mic.name]), 0)))
+                distance = np.linalg.norm(mic.pos - speaker.pos)
+                time_delays[src][mic.name] = float(distance / self.speed_of_sound)
+
+                decay = 1 / (distance ** self.decay_factor)
+                transmitted_signal[src][mic.name] = decay * np.pad(audio_signals[src], ((int(fS * time_delays[src][mic.name]), 0)))
         
         signal_lengths = np.array([[len(transmitted_signal[src][mic.name]) for mic in self.mic_array.mics] for src in transmitted_signal])
             

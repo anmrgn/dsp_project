@@ -31,8 +31,9 @@ class MicArray:
     Form a microphone array object from json specification.
 
     Attributes:
-    nChannels -- the number of microphones/channels in the array (assumed each mic is 1 channel)
-    mics      -- an array of microphone objects corresponding to microphones in the array
+    nChannels   -- the number of microphones/channels in the array (assumed each mic is 1 channel)
+    mics        -- an array of microphone objects corresponding to microphones in the array
+    name_to_mic -- dictionary from microphone name to microphone object
     """
 
     def __init__(self, cfg_fname: str) -> None:
