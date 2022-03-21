@@ -33,6 +33,12 @@ def main():
 
     print(f"Time delay between signal x and y for sample frequency {fS}: {time_delay(x, y, fS)}")
 
+    print("Now, reverse the signals (will just negate the result)")
+
+    print(f"Sample delay between y and x: {sample_delay(y,x)}")
+
+    print(f"Time delay between signal y and x for sample frequency {fS}: {time_delay(y, x, fS)}")
+
 
 if __name__ == "__main__":
     main()
