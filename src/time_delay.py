@@ -5,6 +5,8 @@ def sample_delay(x: np.ndarray, y: np.ndarray) -> int:
     Determines the relative sample offset of signal y relative to x
     
     Both signals are assumed to start at the same time (index 0 of x and y both correspond to the same time)
+
+    Both signals are assumed to have the same sample rate (i.e. the samples of x correspond to the samples of y)
     """
     return len(y) - 1 - np.argmax(np.correlate(x, y, "full"))
 
@@ -13,6 +15,8 @@ def time_delay(x: np.ndarray, y: np.ndarray, fS: float) -> float:
     Determines the relative time offset of signal y relative to x
     
     Both signals are assumed to start at the same time (index 0 of x and y both correspond to the same time)
+
+    Both signals are assumed to have the same sample rate fS (i.e. the samples of x correspond to the samples of y)
     """
 
     return sample_delay(x,y) / fS
