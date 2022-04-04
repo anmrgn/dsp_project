@@ -17,6 +17,17 @@ class Sim:
         self.physics_cfg_fname = physics_cfg_fname
         self._load_physics_cfg()
 
+    def get_sample_frequency(self) -> Union[float, None]:
+        """
+        Returns the sample frequency of the microphones and speakers (if all are the same), else None
+        """
+        mic_freq = self.mic_array.get_sample_freq()
+        speaker_freq = self.speaker_array.get_sample_freq()
+        if mic_freq == speaker_freq and mic_freq is not None and speaker_freq is not None:
+            return mic_freq
+        else:
+            return None
+
     def run(self, audio_signals: dict[Union[int, str], Union[np.ndarray, list[float]]]) -> dict[Union[int, str], np.ndarray]:
         """
         Run simulation for audio signals corresponding to speaker names, return audio signals received by microphones
@@ -80,5 +91,5 @@ class Sim:
         self.speed_of_sound = data["speed_of_sound"]
         self.decay_factor = data["decay_factor"]
 
-    def show_mic_locs(self) -> None:
+    def show_mic_speaker_locs(self) -> None:
         pass

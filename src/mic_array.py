@@ -103,9 +103,19 @@ class MicArray:
             
     def __contains__(self, name: str) -> bool:
         """
-        Checks to see if the speaker array contains a speaker with name given by 
+        Checks to see if the mic array contains a mic with name given by name
         """
 
         return name in self.name_to_mic
+
+    def set_mic_locs(self, locs: dict[Union[int, str], Union[list[float], np.ndarray]]) -> None:
+        """
+        Takes a dictionary from mic name to 3D coordinate position and updates the locations of the mics given in the dictionary
+        """
+        for mic_name, pos in locs.values():
+            if mic_name in self:
+                self.name_to_mic[mic_name].pos = np.array(pos)
+            else:
+                raise InvalidInput(f"Mic name {mic_name} does not exist in the mic array")
     
     
