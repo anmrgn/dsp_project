@@ -106,3 +106,13 @@ class SpeakerArray:
         """
 
         return name in self.name_to_speaker
+
+    def set_speaker_locs(self, locs: dict[Union[int, str], Union[list[float], np.ndarray]]) -> None:
+        """
+        Takes a dictionary from speaker name to 3D coordinate position and updates the locations of the speakers given in the dictionary
+        """
+        for speaker_name, pos in locs.items():
+            if speaker_name in self:
+                self.name_to_speaker[speaker_name].pos = np.array(pos)
+            else:
+                raise InvalidInput(f"Speaker name {speaker_name} does not exist in the speaker array")
