@@ -19,6 +19,7 @@ def plot_audio_dat(audio_dat: dict[Union[int, str], np.ndarray], fS: float) -> N
     plt.tight_layout()
     plt.show()
     
+    
 
 
 def pprint_audio_dat(audio_dat: dict[Union[int, str], np.ndarray]) -> None:
