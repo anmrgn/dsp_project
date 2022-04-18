@@ -63,7 +63,7 @@ class Sim:
                 time_delays[src][mic.name] = float(distance / self.speed_of_sound)
 
                 decay = 1 / (distance ** self.decay_factor)
-                transmitted_signal[src][mic.name] = decay * np.pad(audio_signals[src], ((int(fS * time_delays[src][mic.name]), 0)))
+                transmitted_signal[src][mic.name] = decay * np.pad(audio_signals[src], ((int(fS * time_delays[src][mic.name]), 0),))
         
         signal_lengths = np.array([[len(transmitted_signal[src][mic.name]) for mic in self.mic_array.mics] for src in transmitted_signal])
             
@@ -77,7 +77,7 @@ class Sim:
             for src in transmitted_signal:
                 signal = transmitted_signal[src][mic.name]
 
-                captured_audio[mic.name] += np.pad(signal, ((0, max_len - len(signal))))
+                captured_audio[mic.name] += np.pad(signal, ((0, max_len - len(signal)),))
 
 
         return captured_audio

@@ -12,7 +12,7 @@ rmax = 50 # maximum radius for speaker location
 def gen_random_locs(N: int, rmin: float, rmax: float):
 
     r = np.random.uniform(rmin, rmax, N)
-    theta = np.random.uniform(0, np.pi, N)
+    theta = np.random.uniform(0, np.pi / 2, N)
     phi = np.random.uniform(0, 2 * np.pi, N)
 
     x = r * np.sin(theta) * np.cos(phi)
