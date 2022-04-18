@@ -9,11 +9,14 @@ def plot_audio_dat(audio_dat: dict[Union[int, str], np.ndarray], fS: float) -> N
     """
     fig, axs = plt.subplots(len(audio_dat))
     fig.suptitle("Audio data")
-    
+
+    max_len = max([len(signal) for signal in audio_dat.values()])
+    t = np.array(range(max_len)) / fS
+
     for ax, (name, audio_signal) in zip(axs, audio_dat.items()):
-        t = np.array(range(len(audio_signal))) / fS
+        
         ax.set_title(f"Audio source from speaker/microphone {name}")
-        ax.plot(t, audio_signal)
+        ax.plot(t, np.pad(audio_signal, ((0, max_len - len(audio_signal)),)))
         ax.set(xlabel="Time (s)", ylabel="Signal")
 
     plt.tight_layout()
