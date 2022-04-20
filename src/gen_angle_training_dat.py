@@ -5,9 +5,9 @@ from proj_cfg import proj_cfg
 from time_delay import time_delay
 import tqdm
 
-N = 10000 # number of datapoints to generate
-rmin = 5  # minimum radius for speaker location
-rmax = 50 # maximum radius for speaker location
+N = 100000 # number of datapoints to generate
+rmin = 0.5  # minimum radius for speaker location
+rmax = 3 # maximum radius for speaker location
 
 def gen_random_locs(N: int, rmin: float, rmax: float):
 
