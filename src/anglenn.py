@@ -138,7 +138,7 @@ def main():
         return loss 
 
 
-    epochs = 5
+    epochs = 10
     size = len(train_dataloader.dataset)
 
     train_loss = []
@@ -162,14 +162,14 @@ def main():
             loss.backward()
             optimizer.step()
 
-            # if batch % 200 == 0:
+            if batch % 200 == 0:
 
-            #     # Append to lists 
-            #     train_loss.append(loss.item())
+                # Append to lists 
+                train_loss.append(loss.item())
         
-            #     # Do validation
-            #     validation_loss = validation(val_dataloader, model, loss_fn)
-            #     val_loss.append(validation_loss)
+                # Do validation
+                validation_loss = validation(val_dataloader, model, loss_fn)
+                val_loss.append(validation_loss)
         
             # Log some info
             loss, current = loss.item(), (batch + 1) * len(x)
@@ -178,7 +178,8 @@ def main():
         # Step the LR scheduler
         scheduler.step()
     
-    print(train_loss)
+    print(f"Train loss: {train_loss}")
+    print(f"Val loss: {val_loss}")
 
 
 if __name__ == "__main__":
