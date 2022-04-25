@@ -112,7 +112,7 @@ class MicArray:
         """
         Takes a dictionary from mic name to 3D coordinate position and updates the locations of the mics given in the dictionary
         """
-        for mic_name, pos in locs.values():
+        for mic_name, pos in locs.items():
             if mic_name in self:
                 self.name_to_mic[mic_name].pos = np.array(pos)
             else:
