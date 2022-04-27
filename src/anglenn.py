@@ -8,6 +8,7 @@ from torchvision.transforms import ToTensor, Normalize, Compose
 import pandas as pd
 import os.path as osp
 from proj_cfg import proj_cfg
+import pickle
 
 use_dummy_data = False
 
@@ -57,6 +58,8 @@ class Model(nn.Module):
 
 
 def main():
+    model_save_path = osp.join(proj_cfg["root_dir"], f"nn/{proj_cfg['angle_nn']}")
+
     plt.style.use('ggplot')
 
     # Get cpu or gpu device for training.
@@ -93,6 +96,10 @@ def main():
 
     x_train_mean = x_train.mean()
     x_train_std = x_train.std()
+
+    time_delay_transform_file = osp.join(proj_cfg["root_dir"], f"nn/{proj_cfg['time_delay_transform']}")
+    with open(time_delay_transform_file, "wb") as f:
+        pickle.dump({"mean": x_train_mean, "std": x_train_std}, f)
     
     # Create data loaders
     train_dataloader = DataLoader(AngleDataset(x_train, y_train, x_train_mean, x_train_std), batch_size=batch_size, shuffle=True, num_workers=4)
@@ -180,6 +187,9 @@ def main():
     
     print(f"Train loss: {train_loss}")
     print(f"Val loss: {val_loss}")
+
+
+    torch.save(model.state_dict(), model_save_path)
 
 
 if __name__ == "__main__":
