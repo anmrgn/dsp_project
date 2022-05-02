@@ -39,8 +39,8 @@ def augment(mic_dat: dict[Union[int, str], Union[list[float], np.ndarray]], resa
     rval = {}
 
     for mic_name, dat in mic_dat.items():
-        k     = np.linspace(0, len(dat) - 1, len(dat))
-        tck = interpolate.splrep(k, dat)
+        k   = np.linspace(0, len(dat) - 1, len(dat))
+        tck = interpolate.splrep(k, dat , s=0)
 
         k_new = np.linspace(0, len(dat) - 1, resample * (len(dat) - 1) + 1)
         augmented_mic_dat = interpolate.splev(k_new, tck, der=0)
