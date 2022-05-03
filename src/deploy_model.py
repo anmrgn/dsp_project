@@ -97,12 +97,12 @@ def main():
     s = Sim(mic_cfg_fname, speaker_cfg_fname, physics_cfg_fname)
     fS = s.get_sample_frequency()
 
-    s.speaker_array.set_speaker_locs({0: np.array([0, 1, 0])}) # expect theta = pi / 2, phi = pi / 2
+    s.speaker_array.set_speaker_locs({0: np.array([1 / np.sqrt(2), 1 / np.sqrt(2), 1])}) # expect theta = pi / 4, phi = pi / 4
     rval = s.run({0: np.array([1, 2, 3, 2, 1])})
 
     theta, phi = pred_angles(rval, fS)
     print(f"predicted theta = {theta}, phi = {phi}")
-    print(f"expected theta = {torch.pi / 2}, phi = {torch.pi / 2}")
+    print(f"expected theta = {torch.pi / 4}, phi = {torch.pi / 4}")
 
 
 if __name__ == "__main__":
