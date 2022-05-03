@@ -117,7 +117,40 @@ def main():
 
     print(model)
 
-    # Set up loss function and optimizer
+    # def custom_loss(output, target):
+    #     output_theta = output[:, 0]
+    #     output_phi = output[:, 1]
+    #     target_theta = target[:, 0]
+    #     target_phi = target[:, 1]
+
+    #     output_x = torch.sin(output_theta) * torch.cos(output_phi)
+    #     output_y = torch.sin(output_theta) * torch.sin(output_phi)
+    #     output_z = torch.cos(output_theta)
+
+    #     target_x = torch.sin(target_theta) * torch.cos(target_phi)
+    #     target_y = torch.sin(target_theta) * torch.sin(target_phi)
+    #     target_z = torch.cos(target_theta)
+
+    #     rval = torch.mean(torch.arccos(output_x * target_x + output_y * target_y + output_z * target_z))
+
+    #     if rval.isnan():
+    #         print("output")
+    #         print(output)
+    #         print(output_x)
+    #         print(output_y)
+    #         print(output_z)
+
+    #         print("target")
+    #         print(target_x)
+    #         print(target_y)
+    #         print(target_z)
+
+    #         exit()
+
+    #     return rval
+
+    # print(custom_loss(torch.tensor([[torch.pi / 2, 0], [torch.pi / 2, 2 * torch.pi]]), torch.tensor([[torch.pi / 2, 0], [torch.pi / 2, 0.1]])))
+    # # Set up loss function and optimizer
     loss_fn = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, weight_decay=0.0001)
 

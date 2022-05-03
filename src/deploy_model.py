@@ -7,6 +7,7 @@ import pickle
 import numpy as np
 from time_delay import time_delay
 from scipy import interpolate
+from simulate_sound import Sim
 
 input_units = 6
 output_units = 2
@@ -50,8 +51,6 @@ def augment(mic_dat: dict[Union[int, str], Union[list[float], np.ndarray]], resa
     return rval
 
 
-
-
 def pred_angles(mic_dat: dict[Union[int, str], Union[list[float], np.ndarray]], fS: int, resample: int = 5):
     """
     Assumes microphones are oriented at locations
@@ -65,6 +64,19 @@ def pred_angles(mic_dat: dict[Union[int, str], Union[list[float], np.ndarray]], 
     Resample specifies how to augment the mic data, i.e. for each one data point becomes resample data points after augmentation
 
     Returns theta, phi
+
+    Visual representation of mic locations in x-y plane
+
+                y
+               |            
+               |            
+         1     |     3      
+               |             
+    ___________|____________ x
+               |            
+         0     |     2      
+               |            
+               |                       
     """
     mic_dat = augment(mic_dat, resample)
     fS *= resample
@@ -79,7 +91,18 @@ def pred_angles(mic_dat: dict[Union[int, str], Union[list[float], np.ndarray]], 
     return time_delays_to_angles(td0, td1, td2, td3, td4, td5)
 
 def main():
-    print(pred_angles({idx: np.array([1,2,3,5,6,4,4,3]) for idx in range(4)}, 44000))
+    mic_cfg_fname = osp.join(proj_cfg["root_dir"], "cfg/mic_cfg.json")
+    speaker_cfg_fname = osp.join(proj_cfg["root_dir"], "cfg/speaker_cfg.json")
+    physics_cfg_fname = osp.join(proj_cfg["root_dir"], "cfg/physics_cfg.json")
+    s = Sim(mic_cfg_fname, speaker_cfg_fname, physics_cfg_fname)
+    fS = s.get_sample_frequency()
+
+    s.speaker_array.set_speaker_locs({0: np.array([0, 1, 0])}) # expect theta = pi / 2, phi = pi / 2
+    rval = s.run({0: np.array([1, 2, 3, 2, 1])})
+
+    theta, phi = pred_angles(rval, fS)
+    print(f"predicted theta = {theta}, phi = {phi}")
+    print(f"expected theta = {torch.pi / 2}, phi = {torch.pi / 2}")
 
 
 if __name__ == "__main__":
