@@ -65,19 +65,16 @@ def Get_Raw_Audio():
     return Data_arrays
     
     
-def main():
+#def main():
     
-    Data_sample = Get_Raw_Audio()
-    print(Data_sample.keys())
-    print(Data_sample.values())
+    #Data_sample = Get_Raw_Audio()
+    #print(Data_sample.keys())
+    #print(Data_sample.values())
     
     
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+    #main()
 
 # "arecord -Dac108 -f S32_LE -r 16000 -c 4 hello.wav"  Record sound on cmd line
 # "Input Device id  2  -  seeed-4mic-voicecard: bcm2835-i2s-ac10x-codec0 ac10x-codec0-0 (hw:3,0)"
-
-
-
 #current_time = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
