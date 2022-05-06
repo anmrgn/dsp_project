@@ -2,7 +2,7 @@ from typing import Union
 import matplotlib.pyplot as plt
 import numpy as np
 
-def visualize(theta, phi, mic_locs: dict[Union[str, int], Union[list[float], np.ndarray]] = None, vec_len = 0.05):
+def visualize(theta, phi, mic_locs: dict[Union[str, int], Union[list[float], np.ndarray]] = None, vec_len = 0.05, actual_theta = None, actual_phi = None):
     """
     Visualize location of speaker relative to microphone locations.
 
@@ -20,8 +20,20 @@ def visualize(theta, phi, mic_locs: dict[Union[str, int], Union[list[float], np.
     y = vec_len * np.sin(theta) * np.sin(phi)
     z = vec_len * np.cos(theta)
 
-    ax.quiver(0, 0, 0, x, y, z)
+    ax.quiver(0, 0, 0, x, y, z, color="tab:purple")
 
+    if actual_theta is not None and actual_phi is not None:
+        actual_x = vec_len * np.sin(actual_theta) * np.cos(actual_phi)
+        actual_y = vec_len * np.sin(actual_theta) * np.sin(actual_phi)
+        actual_z = vec_len * np.cos(actual_theta)
+
+        ax.quiver(0, 0, 0, actual_x, actual_y, actual_z, color="tab:orange")
+
+        ax.legend(["predicted direction", "actual direction"])
+    else:
+        ax.legend(["predicted direction"])
+
+        
     
     ax.set_xlabel("x axis")
     ax.set_ylabel("y axis")
@@ -41,4 +53,4 @@ def visualize(theta, phi, mic_locs: dict[Union[str, int], Union[list[float], np.
     plt.show()
 
 if __name__ == "__main__":
-    visualize(np.pi/4, np.pi/4)
+    visualize(np.pi/4, np.pi/4, actual_theta=np.pi/3, actual_phi=np.pi/3)
