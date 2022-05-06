@@ -27,11 +27,24 @@ with open(time_delay_transform_file, "rb") as f:
     mean = data["mean"]
     std = data["std"]
 
+def fix_angles(theta, phi):
+    if theta < 0:
+        phi += np.pi
+        theta = np.abs(theta)
+    
+    while phi < 0:
+        phi += 2 * np.pi
+    
+    while phi > 2 * np.pi:
+        phi -= 2 * np.pi
+    
+    return theta, phi
+
 def time_delays_to_angles(td0, td1, td2, td3, td4, td5):
     inp = (torch.tensor([td0, td1, td2, td3, td4, td5], dtype=torch.float32) - mean) / std
     res = model(inp)
     theta, phi = res
-    return theta.item(), phi.item()
+    return fix_angles(theta.item(), phi.item())
 
 
 def augment(mic_dat: dict[Union[int, str], Union[list[float], np.ndarray]], resample: int):
@@ -97,12 +110,20 @@ def main():
     s = Sim(mic_cfg_fname, speaker_cfg_fname, physics_cfg_fname)
     fS = s.get_sample_frequency()
 
-    s.speaker_array.set_speaker_locs({0: np.array([1 / np.sqrt(2), 1 / np.sqrt(2), 1])}) # expect theta = pi / 4, phi = pi / 4
+    set_r = 1
+    set_theta = np.pi / 4
+    set_phi = 7 * np.pi / 4
+
+    set_x = set_r * np.sin(set_theta) * np.cos(set_phi)
+    set_y = set_r * np.sin(set_theta) * np.sin(set_phi)
+    set_z = set_r * np.cos(set_theta)
+
+    s.speaker_array.set_speaker_locs({0: np.array([set_x, set_y, set_z])}) # expect theta = pi / 4, phi = pi / 4
     rval = s.run({0: np.array([1, 2, 3, 2, 1])})
 
     theta, phi = pred_angles(rval, fS)
     print(f"predicted theta = {theta}, phi = {phi}")
-    print(f"expected theta = {torch.pi / 4}, phi = {torch.pi / 4}")
+    print(f"expected theta = {set_theta}, phi = {set_phi}")
 
 
 if __name__ == "__main__":
