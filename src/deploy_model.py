@@ -8,6 +8,7 @@ import numpy as np
 from time_delay import time_delay
 from scipy import interpolate
 from simulate_sound import Sim
+from visualization import visualize
 
 input_units = 6
 output_units = 2
@@ -111,7 +112,7 @@ def main():
     fS = s.get_sample_frequency()
 
     set_r = 1
-    set_theta = np.pi / 4
+    set_theta = np.pi / 6
     set_phi = 7 * np.pi / 4
 
     set_x = set_r * np.sin(set_theta) * np.cos(set_phi)
@@ -124,6 +125,7 @@ def main():
     theta, phi = pred_angles(rval, fS)
     print(f"predicted theta = {theta}, phi = {phi}")
     print(f"expected theta = {set_theta}, phi = {set_phi}")
+    visualize(theta, phi, actual_phi=set_phi, actual_theta=set_theta)
 
 
 if __name__ == "__main__":
