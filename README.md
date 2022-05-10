@@ -7,20 +7,20 @@ All units are SI (m, m/s, etc.)
 
 Description of directory structure and important files:
 
-/cfg:
+/cfg:  
     **mic_cfg.json**: microphone array config file  
     **physics_cfg.json**: physics constants used in the simulation  
     **speaker_cfg.json**: speaker array config file  
 
-/dat:
+/dat:  
     **angle_training_dat.csv**: the 100,00 data points used to train the neural network. Each data point is a combination of 6 time delay values and the corresponding 2 angles.  
     **dummy.csv**: dummy training data to verify that the neural network training process worked  
 
-/nn:
+/nn:  
     **angle_nn.pth**: saved pytorch model statedict corresponding to the trained neural network  
     **time_delay_transform**: mean and std. deviation data used to standardize the input time delays for the neural network  
 
-/src:
+/src:  
     **anglenn.py**: Defines the model class used to describe the neural network and trains it using the data points stored in angle_training_dat.csv  
     **deploy_model.py**: Defines the pred_angles() function that takes mic data and uses the neural network to predict the angles corresponding to the speaker location. Also contains a main() function that allows you to test the model for a specific input (try running the deploy_model.py script!)  
     **eval_result.py**: Defines the eval_err() function used to compute the average angle between a list of predicted angles and a list of true angles  
