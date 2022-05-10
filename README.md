@@ -22,7 +22,7 @@ Description of directory structure and important files:
 
 /src:  
     **anglenn.py**: Defines the model class used to describe the neural network and trains it using the data points stored in angle_training_dat.csv  
-    **deploy_model.py**: Defines the pred_angles() function that takes mic data and uses the neural network to predict the angles corresponding to the speaker location. Also contains a main() function that allows you to test the model for a specific input. **try running the deploy_model.py script!**
+    **deploy_model.py**: Defines the pred_angles() function that takes mic data and uses the neural network to predict the angles corresponding to the speaker location. Also contains a main() function that allows you to test the model for a specific input. **try running the deploy_model.py script!**  
     **eval_result.py**: Defines the eval_err() function used to compute the average angle between a list of predicted angles and a list of true angles  
     **example_code.py**: Example of how to run a simulation  
     **exceptions.py**: Defines custom exceptions used in this project  
