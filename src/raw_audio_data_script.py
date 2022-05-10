@@ -62,9 +62,6 @@ def Get_Raw_Audio():
         
         #bm4 = np.fromstring(data,dtype=np.float32)[3::4]
         b4 = np.append(b4, struct.unpack(str(CHUNK*4)+'f', data)[3::4])
-        
-    Data_arrays = {0: b3, 1: b4, 2: b2, 3: b1}
-    
 
     print("Recording Ended")
     
@@ -72,7 +69,37 @@ def Get_Raw_Audio():
     stream.close()
     p.terminate()
 
+    # transition time is unused
+    [b1test,transition_time,b1data] = np.array_split(b1, 3)
+    [b2test,transition_time,b2data] = np.array_split(b2, 3)
+    [b3test,transition_time,b3data] = np.array_split(b3, 3)
+    [b4test,transition_time,b4data] = np.array_split(b4, 3)
+        
+    if sum(abs(b1test)) > sum(abs(b3test)):
+        Data_arrays = {0: b1data, 1: b2data, 2: b4data, 3: b3data}
+        print("case 1 was used")
+    else:    
+        Data_arrays = {0: b3data, 1: b4data, 2: b2data, 3: b1data}
+        print("case 2 was used")
+
     
+    x = np.arange(0, 79872)
+    plt.plot(x, b1data, label='0')
+    plt.plot(x, b2data, label='1')
+    plt.plot(x, b4data, label='2')
+    plt.plot(x, b3data, label='3')
+    plt.legend()
+    plt.title("case 1")
+    plt.show()
+
+    plt.plot(x, b1data, label='0')
+    plt.plot(x, b2data, label='1')
+    plt.plot(x, b4data, label='2')
+    plt.plot(x, b3data, label='3')
+    plt.legend()
+    plt.title("case 2")
+    plt.show()
+
     return Data_arrays
     
     
