@@ -113,7 +113,7 @@ def main():
 
     set_r = 1
     set_theta = np.pi / 6
-    set_phi = 7 * np.pi / 4
+    set_phi = 3 * np.pi / 4
 
     set_x = set_r * np.sin(set_theta) * np.cos(set_phi)
     set_y = set_r * np.sin(set_theta) * np.sin(set_phi)
